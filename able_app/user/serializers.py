@@ -25,3 +25,4 @@ class DetailsSerializer(serializers.ModelSerializer):
         model = MemberDetails
         fields = ('id', 'user_name', 'members', 'house_size', 'food_choices', 'water_consumption', 'water_frequency', 'purchases'
         , 'waste_production', 'recycle', 'transport_car', 'transport_public', 'transport_air')
+        read_only_fields = ('id', 'user_name')
