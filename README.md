@@ -1,5 +1,10 @@
 # UniverseAble
 Hackers of the Galaxy
+A Sustainable App that tracks the carbon footprint of users. 
+
+![ss1](/ss/unknown.png) ![ss3](/ss/unknown3.png)
+![ss2](/ss/unknown1.png)![ss4](/ss/unknown2.png)
+
 
 ## Getting Started
 
@@ -36,13 +41,6 @@ you basically need to install the whole flutter framework and you can do that by
 https://flutter.dev/docs/get-started/install
 ```
 
-
-
-## Built With //TODO
-
-* [Dropwizard](http://www.dropwizard.io/1.0.2/docs/) - The web framework used
-* [Maven](https://maven.apache.org/) - Dependency Management
-* [ROME](https://rometools.github.io/rome/) - Used to generate RSS Feeds
 
 ## Contributing //TODO
 
