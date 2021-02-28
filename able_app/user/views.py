@@ -17,9 +17,37 @@ def form_view(request_iter):
     form = MemberDetailForm()
     return  render(request_iter,'index.html', {"form": form})
 
+class GetUserName(APIView):
+    def get(self, request, user_id: int, format=None):
+        queryset = User.objects.all()
+        if user_id is not None:
+            queryset = queryset.filter(id__exact=user_id)
+
+        if len(queryset) == 0:
+            return Response({"Error": "No output for the selected user"},
+                            status=status.HTTP_404_NOT_FOUND)
+
+        serialize = UserSerializer(queryset[0])
+        output_data = serialize.data['username']
+        return Response(output_data)    
+
+class GetUserScore(APIView):
+    def get(self, request, user_id: int, format=None):
+        queryset = ScoreModel.objects.all()
+        if user_id is not None:
+            queryset = queryset.filter(user_name__exact=user_id)
+
+        if len(queryset) == 0:
+            return Response({"Error": "No output for the selected user"},
+                            status=status.HTTP_404_NOT_FOUND)
+
+        serialize = ScoreSerializer(queryset[0])
+        output_data = serialize.data
+        return Response(output_data)
+
 class GetAllScore(APIView):
     def get(self, request, format=None):
-        queryset = ScoreModel.objects.all()
+        queryset = ScoreModel.objects.all().order_by('score')
         if len(queryset) == 0:
             return Response({"Error": "No scores in the Database."},
                             status=status.HTTP_404_NOT_FOUND)

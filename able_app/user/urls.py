@@ -1,4 +1,4 @@
-from .views import RegisterAPI, LoginAPI, GetAllScore, UpdateDetails
+from .views import RegisterAPI, LoginAPI, GetAllScore, UpdateDetails, GetUserScore, GetUserName
 from knox import views as knox_views
 from django.urls import path, include
 from django.contrib.auth.views import LogoutView
@@ -10,6 +10,8 @@ urlpatterns = [
     path('user/register/', RegisterAPI.as_view(), name='register'),
     path('user/login/', LoginAPI.as_view(), name='login'),
     path('get-all-scores/', GetAllScore.as_view(), name='scores'),
+    path('get-score/<int:user_id>/', GetUserScore.as_view(), name='score'),
+    path('get-username/<int:user_id>/', GetUserName.as_view(), name='username'),
     path('post-details/', UpdateDetails.as_view(), name='details'),
     path("user/logout/", LogoutView.as_view(), name="logout"),
     path('form/', views.form_view, name="form")
