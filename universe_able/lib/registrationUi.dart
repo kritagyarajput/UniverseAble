@@ -35,13 +35,11 @@ class _RegistrationUiState extends State<RegistrationUi> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.blue[900],
       body: SafeArea(
         child: Container(
           decoration: BoxDecoration(
-            image: DecorationImage(
-              image: AssetImage('images/bg1.png'),
-              fit: BoxFit.fill,
-            ),
+            color: Colors.blue[900],
           ),
           child: Center(
             child: Column(
@@ -63,7 +61,7 @@ class _RegistrationUiState extends State<RegistrationUi> {
                   height: MediaQuery.of(context).size.height / 2,
                   width: MediaQuery.of(context).size.width * 0.7,
                   decoration: BoxDecoration(
-                    color: Colors.purple,
+                    color: Colors.lightGreenAccent[700],
                     boxShadow: [
                       BoxShadow(
                           offset: Offset(0, 2),
@@ -78,7 +76,7 @@ class _RegistrationUiState extends State<RegistrationUi> {
                         height: 10,
                       ),
                       Text(
-                        'Login',
+                        'Register',
                         style: kHeadingFont.copyWith(fontSize: 25),
                       ),
                       Padding(
@@ -173,12 +171,14 @@ class _RegistrationUiState extends State<RegistrationUi> {
                               username, email, password);
 
                           Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => DashboardScreen(
-                                        username: username,
-                                        res: res,
-                                      )));
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => DashboardScreen(
+                                username: username,
+                                res: res,
+                              ),
+                            ),
+                          );
                         },
                         child: Container(
                           decoration: BoxDecoration(

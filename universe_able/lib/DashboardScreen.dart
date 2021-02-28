@@ -3,6 +3,7 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:universe_able/enterDetails.dart';
+import 'package:universe_able/leaderBoard.dart';
 import 'dart:convert';
 import 'constants.dart';
 
@@ -17,28 +18,44 @@ class DashboardScreen extends StatefulWidget {
 
 class _DashboardScreenState extends State<DashboardScreen> {
   String name;
-  int id;
   String token;
-  int score;
-  var decodedData;
+  int id;
+  var score;
+  bool haveScore = false;
+  var data;
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
     name = widget.username;
-    id = widget.id;
     token = widget.res['token'];
-    _getScore(id);
+    id = widget.id;
+    setState(() {
+      data = getScore(id);
+    });
+
+    // print(data);
   }
 
-  Future _getScore(int id) async {
-    print(id);
-    print(token);
+  Future getScore(int id) async {
     http.Response response =
-        await http.get('http://192.168.29.14:8080/get-score/$id/');
-    if (response.statusCode == 200) {
-      print(id);
-      return jsonDecode(response.body);
+        await http.get("http://192.168.29.14:8080/get-score/$id/");
+    if (response.body != null) {
+      print(response.body);
+      return response.body;
+    } else {
+      print(response.statusCode);
+    }
+  }
+
+  bool dataDeleted = false;
+  Future<void> delScore(int id) async {
+    http.Response response =
+        await http.delete("http://192.168.29.14:8080/del-score/$id/");
+    if (response.body != null) {
+      setState(() {
+        dataDeleted = true;
+      });
     } else {
       print(response.statusCode);
     }
@@ -46,189 +63,165 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.blue[900],
-      body: SingleChildScrollView(
-        child: SafeArea(
-          child: Column(
-            children: [
-              Container(
-                margin: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
-                height: MediaQuery.of(context).size.height,
-                child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        'Hi,',
-                        style: kHeadingFont,
-                      ),
-                      Text(
-                        '$name',
-                        style: kHeadingFont,
-                      ),
-                      SizedBox(
-                        height: 10.0,
-                      ),
-                      Text(
-                        'Calculate Your Carbon Footprint Score:',
-                        style: kHeadingFont.copyWith(fontSize: 30),
-                      ),
-                      SizedBox(
-                        height: 20.0,
-                      ),
-                      GestureDetector(
-                        onTap: () {
-                          showModalBottomSheet(
-                            context: context,
-                            builder: (BuildContext context) => EnterDetails(
-                              token: token,
-                            ),
-                          );
-                        },
-                        child: Container(
-                          decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(40.0),
-                              color: Colors.lightGreenAccent[700],
-                              boxShadow: [
-                                BoxShadow(
-                                    offset: Offset(0, 2),
-                                    blurRadius: 10,
-                                    color: Colors.black45)
-                              ]),
-                          child: Center(
-                            child: Text(
-                              'Calculate',
-                              style: kHeadingFont.copyWith(
-                                  fontSize: 25, color: Colors.blue[900]),
-                            ),
-                          ),
-                        ),
-                      ),
-                      SizedBox(
-                        height: 10,
-                      ),
-                      (score != null)
-                          ? Text('Your Score is: $score')
-                          : SizedBox(
-                              height: 20,
-                            ),
-                      SizedBox(
-                        height: 10,
-                      ),
-                      Center(
-                        child: Image(
-                          image: AssetImage('images/earth.png'),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-              Container(
-                margin: EdgeInsets.all(10),
-                height: 100,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(40.0),
-                  color: Colors.lightGreenAccent[700],
-                ),
-                child: Center(
-                  child: Text('Leaderboard',
-                      style: kHeadingFont.copyWith(color: Colors.blue[900])),
-                ),
-              ),
-              Container(
-                margin: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
-                height: MediaQuery.of(context).size.height * 1.03,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(40.0),
-                  color: Colors.lightGreenAccent[700],
-                ),
+    return (data == null)
+        ? Center(child: CircularProgressIndicator())
+        : Scaffold(
+            backgroundColor: Colors.blue[900],
+            body: SingleChildScrollView(
+              child: SafeArea(
                 child: Column(
                   children: [
-                    Padding(
-                      padding: const EdgeInsets.all(15.0),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: [
-                          Container(
-                            decoration: BoxDecoration(
-                                color: Colors.white30,
-                                borderRadius: BorderRadius.circular(15)),
-                            child: Padding(
-                              padding: const EdgeInsets.symmetric(
-                                  horizontal: 20, vertical: 10),
-                              child: Center(
-                                  child: Text(
-                                'Rank',
-                                style: kFieldsFont.copyWith(
-                                    color: Colors.blue[900]),
-                              )),
+                    Container(
+                      margin:
+                          EdgeInsets.symmetric(vertical: 10, horizontal: 10),
+                      height: MediaQuery.of(context).size.height,
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              'Hi,',
+                              style: kHeadingFont,
                             ),
-                          ),
-                          Container(
-                            margin: EdgeInsets.symmetric(horizontal: 35),
-                            decoration: BoxDecoration(
-                                color: Colors.white30,
-                                borderRadius: BorderRadius.circular(15)),
-                            child: Padding(
-                              padding: const EdgeInsets.symmetric(
-                                  horizontal: 28, vertical: 10),
-                              child: Center(
-                                  child: Text(
-                                'Name',
-                                style: kFieldsFont.copyWith(
-                                    color: Colors.blue[900]),
-                              )),
+                            Text(
+                              '$name',
+                              style: kHeadingFont,
                             ),
-                          ),
-                          Container(
-                            decoration: BoxDecoration(
-                                color: Colors.white30,
-                                borderRadius: BorderRadius.circular(15)),
-                            child: Padding(
-                              padding: const EdgeInsets.symmetric(
-                                  horizontal: 20, vertical: 10),
-                              child: Center(
-                                  child: Text(
-                                'Score',
-                                style: kFieldsFont.copyWith(
-                                    color: Colors.blue[900]),
-                              )),
+                            SizedBox(
+                              height: 10.0,
                             ),
-                          ),
-                        ],
+                            Container(
+                              child: Center(
+                                child: Text(
+                                  "Your Score is: ${data['score']}",
+                                  style: kHeadingFont,
+                                ),
+                              ),
+                            ),
+                            Column(
+                              children: [
+                                Text(
+                                  'Calculate Your Carbon Footprint Score:',
+                                  style: kHeadingFont.copyWith(fontSize: 30),
+                                ),
+                                SizedBox(
+                                  height: 20.0,
+                                ),
+                                GestureDetector(
+                                  onTap: () async {
+                                    final result = await showModalBottomSheet(
+                                      context: context,
+                                      builder: (BuildContext context) =>
+                                          EnterDetails(
+                                        token: token,
+                                      ),
+                                    );
+                                    if (result != null) {
+                                      setState(() {
+                                        score = result;
+                                        haveScore = true;
+                                      });
+                                    } else {}
+                                  },
+                                  child: Container(
+                                    decoration: BoxDecoration(
+                                        borderRadius:
+                                            BorderRadius.circular(40.0),
+                                        color: Colors.lightGreenAccent[700],
+                                        boxShadow: [
+                                          BoxShadow(
+                                              offset: Offset(0, 2),
+                                              blurRadius: 10,
+                                              color: Colors.black45)
+                                        ]),
+                                    child: Center(
+                                      child: Text(
+                                        'Calculate',
+                                        style: kHeadingFont.copyWith(
+                                            fontSize: 25,
+                                            color: Colors.blue[900]),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                                SizedBox(
+                                  height: 10,
+                                ),
+                              ],
+                            ),
+                            (dataDeleted)
+                                ? null
+                                : GestureDetector(
+                                    onTap: () {
+                                      delScore(id);
+                                    },
+                                    child: Container(
+                                      decoration: BoxDecoration(
+                                          borderRadius:
+                                              BorderRadius.circular(40.0),
+                                          color: Colors.red,
+                                          boxShadow: [
+                                            BoxShadow(
+                                                offset: Offset(0, 2),
+                                                blurRadius: 10,
+                                                color: Colors.black45)
+                                          ]),
+                                      child: Center(
+                                        child: Text(
+                                          'Delete Score',
+                                          style: kHeadingFont.copyWith(
+                                              fontSize: 25,
+                                              color: Colors.white),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                            SizedBox(
+                              height: 10,
+                            ),
+                            Center(
+                              child: Image(
+                                image: AssetImage('images/earth.png'),
+                              ),
+                            ),
+                            SizedBox(
+                              height: 10,
+                            ),
+                            GestureDetector(
+                              onTap: () {
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => LeaderBoard()));
+                              },
+                              child: Container(
+                                decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(40.0),
+                                    color: Colors.yellow,
+                                    boxShadow: [
+                                      BoxShadow(
+                                          offset: Offset(0, 2),
+                                          blurRadius: 10,
+                                          color: Colors.black45)
+                                    ]),
+                                child: Center(
+                                  child: Text(
+                                    'Show LeaderBoard',
+                                    style: kHeadingFont.copyWith(
+                                        fontSize: 25, color: Colors.black),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
                     ),
-                    Padding(
-                      padding: const EdgeInsets.all(10.0),
-                      child: Container(
-                        height: MediaQuery.of(context).size.height * 0.88,
-                        decoration: BoxDecoration(
-                          color: Colors.white30,
-                          borderRadius: BorderRadius.circular(15),
-                        ),
-                        child: ListView.builder(
-                            itemCount: 25,
-                            itemBuilder: (context, index) {
-                              return ListTile(
-                                leading: Text(
-                                  '${index + 1}',
-                                  style: kFieldsFont.copyWith(
-                                      color: Colors.blue[900]),
-                                ),
-                              );
-                            }),
-                      ),
-                    )
                   ],
                 ),
               ),
-            ],
-          ),
-        ),
-      ),
-    );
+            ),
+          );
   }
 }

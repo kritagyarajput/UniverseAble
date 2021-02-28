@@ -19,15 +19,15 @@ class _EnterDetailsState extends State<EnterDetails> {
   String dropdownvalue4 = "None";
   int members = 1;
   int house_size = 1;
-  int food_choices;
-  int water_consumption;
+  int food_choices = 0;
+  int water_consumption = 3;
   int water_frequency = 1;
   int purchases = 0;
   int waste_production = 0;
   int recycle = 0;
-  int transport_car;
-  int transport_public;
-  int transport_air;
+  int transport_car = 0;
+  int transport_public = 0;
+  int transport_air = 0;
 
   void _decrementQty() {
     if (members > 1) {
@@ -116,17 +116,8 @@ class _EnterDetailsState extends State<EnterDetails> {
 
   String url = 'http://192.168.29.14:8080/post-details/';
   Future postRequest(Map map) async {
-    FormData formData = FormData.fromMap(map);
-    Response response;
-    var dio = Dio();
     http.Response httpresponse = await http.post(url,
         body: map, headers: {"Authorization": "Token $receivedToken"});
-    // response = await dio.post('http://192.168.29.14:8080/post-details/',
-    //     data: formData,
-    //     options: Options(headers: {
-    //       "Content-Type": "multipart/form-data",
-    //       "Authorization": "Token $receivedToken"
-    //     }));
 
     if (httpresponse.statusCode != null) {
       return jsonDecode(httpresponse.body);
@@ -134,45 +125,6 @@ class _EnterDetailsState extends State<EnterDetails> {
       print(httpresponse.statusCode);
     }
   }
-
-  // Future _postAllProvidedData(
-  //   int members,
-  //   int house_size,
-  //   int food_choices,
-  //   int water_consumption,
-  //   int water_frequency,
-  //   int purchases,
-  //   int waste_production,
-  //   int recycle,
-  //   int transport_car,
-  //   int transport_public,
-  //   int transport_air,
-  // ) async {
-  //   print(receivedToken);
-  //   http.Response response = await http.post(Uri.encodeFull(url),
-  //       body: jsonEncode({
-  //         "members": members,
-  //         "house_size": house_size,
-  //         "food_choices": food_choices,
-  //         "water_consumption": water_consumption,
-  //         "water_frequency": water_frequency,
-  //         "purchases": purchases,
-  //         "waste_production": waste_production,
-  //         "recycle": recycle,
-  //         "transport_car": transport_car,
-  //         "transport_public": transport_public,
-  //         "transport_air": transport_air,
-  //       }),
-  //       headers: {
-  //         'Content-Type': 'application/json; charset=UTF-8',
-  //         "Authorization": "Token $receivedToken"
-  //       });
-  //   if (response.statusCode == 200) {
-  //     return jsonDecode(response.body);
-  //   } else {
-  //     print(response.statusCode);
-  //   }
-  // }
 
   @override
   Widget build(BuildContext context) {
@@ -721,6 +673,7 @@ class _EnterDetailsState extends State<EnterDetails> {
                     var res = await postRequest(map);
 
                     print(res);
+                    Navigator.pop(context, res);
                   } catch (e) {
                     print(e);
                   }

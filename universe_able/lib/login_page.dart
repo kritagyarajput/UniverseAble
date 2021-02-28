@@ -60,11 +60,7 @@ class _LoginPageState extends State<LoginPage> {
     return Scaffold(
       body: Container(
         height: MediaQuery.of(context).size.height,
-        decoration: BoxDecoration(
-            image: DecorationImage(
-          image: AssetImage('images/bg1.png'),
-          fit: BoxFit.fill,
-        )),
+        decoration: BoxDecoration(color: Colors.blue[900]),
         child: SafeArea(
           child: Center(
             child: Column(
@@ -86,7 +82,7 @@ class _LoginPageState extends State<LoginPage> {
                   height: mq.height / 2.5,
                   width: mq.width * 0.7,
                   decoration: BoxDecoration(
-                    color: Colors.purple,
+                    color: Colors.lightGreenAccent[700],
                     boxShadow: [
                       BoxShadow(
                           offset: Offset(0, 2),
@@ -166,8 +162,6 @@ class _LoginPageState extends State<LoginPage> {
                       GestureDetector(
                         onTap: () async {
                           var res = await postLoginData(username, password);
-                          print(res);
-                          print(res['user']);
                           int id = res['user']['id'];
                           Navigator.push(
                               context,
