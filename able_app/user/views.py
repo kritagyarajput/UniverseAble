@@ -6,7 +6,6 @@ from .serializers import UserSerializer, RegisterSerializer, ScoreSerializer
 from django.contrib.auth import login, logout, authenticate
 from rest_framework.authentication import BasicAuthentication
 from knox.auth import TokenAuthentication
-
 from rest_framework.permissions import IsAuthenticated
 from django.shortcuts import render
 from django.contrib.auth.models import User
@@ -274,6 +273,7 @@ class LoginAPI(KnoxLoginView):
         super(LoginAPI, self).post(request, format=None)
         return Response({
         "user": UserSerializer(user).data,
+        "id" : UserSerializer(user).data['id'],
         "token": AuthToken.objects.create(user)[1],
         })
 
