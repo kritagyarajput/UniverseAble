@@ -4,6 +4,8 @@ from rest_framework.response import Response
 from knox.models import AuthToken
 from .serializers import UserSerializer, RegisterSerializer, ScoreSerializer
 from django.contrib.auth import login, logout
+from rest_framework.authentication import BasicAuthentication
+from rest_framework.permissions import IsAuthenticated
 from django.shortcuts import render
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
@@ -12,6 +14,10 @@ from rest_framework.authtoken.serializers import AuthTokenSerializer
 from knox.views import LoginView as KnoxLoginView
 from .models import ScoreModel
 from .forms import MemberDetailForm
+from django.views.decorators.csrf import csrf_exempt
+
+from django.contrib.auth.decorators import login_required
+
 
 def form_view(request_iter):
     form = MemberDetailForm()
@@ -68,10 +74,10 @@ class GetAllScore(APIView):
 
 class UpdateDetails(APIView):
     def post(self, request, format=None):
-        form = MemberDetailForm(request.POST or None)
+        form = MemberDetailForm(request.POST)
 
-        if form.is_valid():
-
+        if form.is_valid() and request.user.is_authenticated:
+            print(request.user)
             members = form.cleaned_data['members']
             house_size = form.cleaned_data['house_size']
             food_choices = form.cleaned_data['food_choices']
@@ -100,7 +106,8 @@ class UpdateDetails(APIView):
             return Response({"Error" : "User GG"}, status=status.HTTP_403_FORBIDDEN)
         else :
             print(form.errors)
-            return Response({"Error" : 'GG'}, status=status.HTTP_404_NOT_FOUND)
+            print(form.is_valid)
+            return Response({"Error" : 'GG'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
             
 # Grades calucaltion
 def house_score(mem : int, size : int):
