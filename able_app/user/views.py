@@ -3,8 +3,10 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from knox.models import AuthToken
 from .serializers import UserSerializer, RegisterSerializer, ScoreSerializer
-from django.contrib.auth import login, logout
+from django.contrib.auth import login, logout, authenticate
 from rest_framework.authentication import BasicAuthentication
+from knox.auth import TokenAuthentication
+
 from rest_framework.permissions import IsAuthenticated
 from django.shortcuts import render
 from django.contrib.auth.models import User
@@ -73,9 +75,11 @@ class GetAllScore(APIView):
 
 
 class UpdateDetails(APIView):
+    authentication_classes = (TokenAuthentication,)
+    permission_classes = (IsAuthenticated,)
+
     def post(self, request, format=None):
         form = MemberDetailForm(request.POST)
-
         if form.is_valid() and request.user.is_authenticated:
             print(request.user)
             members = form.cleaned_data['members']
