@@ -171,13 +171,13 @@ class _RegistrationUiState extends State<RegistrationUi> {
                         onTap: () async {
                           var res = await postRegistrationData(
                               username, email, password);
-                          String token = res['token'];
+
                           Navigator.push(
                               context,
                               MaterialPageRoute(
                                   builder: (context) => DashboardScreen(
                                         username: username,
-                                        token: token,
+                                        res: res,
                                       )));
                         },
                         child: Container(

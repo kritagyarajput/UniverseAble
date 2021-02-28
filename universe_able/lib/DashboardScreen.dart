@@ -1,27 +1,47 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
 import 'package:universe_able/enterDetails.dart';
-
+import 'dart:convert';
 import 'constants.dart';
 
 class DashboardScreen extends StatefulWidget {
-  DashboardScreen({this.username, this.token});
+  DashboardScreen({this.username, this.res, this.id});
   final String username;
-  final String token;
+  final res;
+  final int id;
   @override
   _DashboardScreenState createState() => _DashboardScreenState();
 }
 
 class _DashboardScreenState extends State<DashboardScreen> {
   String name;
-  String res;
+  int id;
+  String token;
+  int score;
+  var decodedData;
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
     name = widget.username;
-    res = widget.token;
+    id = widget.id;
+    token = widget.res['token'];
+    _getScore(id);
+  }
+
+  Future _getScore(int id) async {
+    print(id);
+    print(token);
+    http.Response response =
+        await http.get('http://192.168.29.14:8080/get-score/$id/');
+    if (response.statusCode == 200) {
+      print(id);
+      return jsonDecode(response.body);
+    } else {
+      print(response.statusCode);
+    }
   }
 
   @override
@@ -52,7 +72,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                         height: 10.0,
                       ),
                       Text(
-                        'Calculate Your Carbon Footprint Score',
+                        'Calculate Your Carbon Footprint Score:',
                         style: kHeadingFont.copyWith(fontSize: 30),
                       ),
                       SizedBox(
@@ -63,7 +83,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                           showModalBottomSheet(
                             context: context,
                             builder: (BuildContext context) => EnterDetails(
-                              token: res,
+                              token: token,
                             ),
                           );
                         },
@@ -87,7 +107,15 @@ class _DashboardScreenState extends State<DashboardScreen> {
                         ),
                       ),
                       SizedBox(
-                        height: 40,
+                        height: 10,
+                      ),
+                      (score != null)
+                          ? Text('Your Score is: $score')
+                          : SizedBox(
+                              height: 20,
+                            ),
+                      SizedBox(
+                        height: 10,
                       ),
                       Center(
                         child: Image(

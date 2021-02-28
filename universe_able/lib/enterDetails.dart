@@ -1,5 +1,4 @@
-import 'dart:io';
-
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:universe_able/constants.dart';
 import 'package:http/http.dart' as http;
@@ -116,19 +115,64 @@ class _EnterDetailsState extends State<EnterDetails> {
   }
 
   String url = 'http://192.168.29.14:8080/post-details/';
+  Future postRequest(Map map) async {
+    FormData formData = FormData.fromMap(map);
+    Response response;
+    var dio = Dio();
+    http.Response httpresponse = await http.post(url,
+        body: map, headers: {"Authorization": "Token $receivedToken"});
+    // response = await dio.post('http://192.168.29.14:8080/post-details/',
+    //     data: formData,
+    //     options: Options(headers: {
+    //       "Content-Type": "multipart/form-data",
+    //       "Authorization": "Token $receivedToken"
+    //     }));
 
-  Future _postAllProvidedData(Map receivedMap) async {
-    print(receivedToken);
-    http.Response response = await http.post(
-      Uri.encodeFull(url),
-      body: jsonEncode(receivedMap),
-    );
-    if (response.statusCode == 200) {
-      return jsonDecode(response.body);
+    if (httpresponse.statusCode != null) {
+      return jsonDecode(httpresponse.body);
     } else {
-      print(response.statusCode);
+      print(httpresponse.statusCode);
     }
   }
+
+  // Future _postAllProvidedData(
+  //   int members,
+  //   int house_size,
+  //   int food_choices,
+  //   int water_consumption,
+  //   int water_frequency,
+  //   int purchases,
+  //   int waste_production,
+  //   int recycle,
+  //   int transport_car,
+  //   int transport_public,
+  //   int transport_air,
+  // ) async {
+  //   print(receivedToken);
+  //   http.Response response = await http.post(Uri.encodeFull(url),
+  //       body: jsonEncode({
+  //         "members": members,
+  //         "house_size": house_size,
+  //         "food_choices": food_choices,
+  //         "water_consumption": water_consumption,
+  //         "water_frequency": water_frequency,
+  //         "purchases": purchases,
+  //         "waste_production": waste_production,
+  //         "recycle": recycle,
+  //         "transport_car": transport_car,
+  //         "transport_public": transport_public,
+  //         "transport_air": transport_air,
+  //       }),
+  //       headers: {
+  //         'Content-Type': 'application/json; charset=UTF-8',
+  //         "Authorization": "Token $receivedToken"
+  //       });
+  //   if (response.statusCode == 200) {
+  //     return jsonDecode(response.body);
+  //   } else {
+  //     print(response.statusCode);
+  //   }
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -647,26 +691,39 @@ class _EnterDetailsState extends State<EnterDetails> {
                 ],
               ),
               GestureDetector(
-                onTap: () {
-                  // Map finalMap = {
-                  //   'members': members,
-                  //   'house_size': house_size,
-                  //   'food_choices': food_choices,
-                  //   'water_consumption': water_consumption,
-                  //   'water_frequency': water_frequency,
-                  //   'purchases': purchases,
-                  //   'waste_production': waste_production,
-                  //   'recycle': recycle,
-                  //   'transport_car': transport_car,
-                  //   'transport_public': transport_public,
-                  //   'transport_air': transport_air
-                  // };
-                  // try {
-                  //   var res = await _postAllProvidedData(finalMap);
-                  //   print(res);
-                  // } catch (e) {
-                  //   print(e);
-                  // }
+                onTap: () async {
+                  Map<String, String> map = {
+                    'members': "$members",
+                    'house_size': "$house_size",
+                    'food_choices': "$food_choices",
+                    'water_consumption': "$water_consumption",
+                    'water_frequency': "$water_frequency",
+                    'purchases': "$purchases",
+                    'waste_production': "$waste_production",
+                    'recycle': "$recycle",
+                    'transport_car': "$transport_car",
+                    'transport_public': "$transport_public",
+                    'transport_air': "$transport_air"
+                  };
+                  print("members=$members");
+                  print("house=$house_size");
+                  print("food=$food_choices");
+                  print("water =$water_consumption");
+                  print("water fre=$water_frequency");
+                  print("purechase s=$purchases");
+                  print("waste=$waste_production");
+                  print("recycle=$recycle");
+                  print("transport=$transport_car");
+                  print("transport pub=$transport_public");
+                  print("Transport air=$transport_air");
+
+                  try {
+                    var res = await postRequest(map);
+
+                    print(res);
+                  } catch (e) {
+                    print(e);
+                  }
                 },
                 child: Container(
                   decoration: BoxDecoration(

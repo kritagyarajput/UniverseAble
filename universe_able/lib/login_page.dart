@@ -166,12 +166,17 @@ class _LoginPageState extends State<LoginPage> {
                       GestureDetector(
                         onTap: () async {
                           var res = await postLoginData(username, password);
-                          String token = res['token'];
+                          print(res);
+                          print(res['user']);
+                          int id = res['user']['id'];
                           Navigator.push(
                               context,
                               MaterialPageRoute(
                                   builder: (context) => DashboardScreen(
-                                      username: username, token: token)));
+                                        username: username,
+                                        res: res,
+                                        id: id,
+                                      )));
                         },
                         child: Container(
                           decoration: BoxDecoration(
