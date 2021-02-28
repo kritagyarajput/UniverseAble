@@ -17,6 +17,17 @@ def form_view(request_iter):
     form = MemberDetailForm()
     return  render(request_iter,'index.html', {"form": form})
 
+class DeleteEntry(APIView):
+    def delete(self, request, user_id: int, format=None):
+        try: 
+            score = ScoreModel.objects.get(user_name=user_id) 
+        except ScoreModel.DoesNotExist: 
+            return Response({'message': 'The score does not exist'}, status=status.HTTP_404_NOT_FOUND) 
+        score.delete()
+        return Response({'message': 'Success'}, status=status.HTTP_200_OK)
+
+
+
 class GetUserName(APIView):
     def get(self, request, user_id: int, format=None):
         queryset = User.objects.all()
@@ -85,6 +96,8 @@ class UpdateDetails(APIView):
             newScore.save()
 
             return Response({"score" : total_score}, status=status.HTTP_200_OK)
+        elif not request.user.is_authenticated:
+            return Response({"Error" : "User GG"}, status=status.HTTP_403_FORBIDDEN)
         else :
             print(form.errors)
             return Response({"Error" : 'GG'}, status=status.HTTP_404_NOT_FOUND)

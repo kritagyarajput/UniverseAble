@@ -3,11 +3,11 @@ from django.contrib.auth.models import User
 
 # Create your models here.
 class ScoreModel(models.Model):
-    user_name = models.ForeignKey(User, on_delete=models.CASCADE)
+    user_name = models.OneToOneField(User, on_delete=models.CASCADE)
     score = models.IntegerField(default=0)
     
     def __str__(self):
-        return self.user_name + " at the score of " + str(self.score) 
+        return str(self.user_name) + " at the score of " + str(self.score) 
 
 class HouseSizeChoices(models.IntegerChoices):
     LARGE = (0, "LARGE")
