@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import MemberDetails
+from .models import ScoreModel
 # Register your models here.
 
-admin.site.register(MemberDetails)
+admin.site.register(ScoreModel)

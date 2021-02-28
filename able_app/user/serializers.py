@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from django.contrib.auth.models import User
-from .models import MemberDetails
+from .models import ScoreModel
 
 # User Serializer
 class UserSerializer(serializers.ModelSerializer):
@@ -20,9 +20,14 @@ class RegisterSerializer(serializers.ModelSerializer):
 
         return user
 
-class DetailsSerializer(serializers.ModelSerializer):
+class ScoreSerializer(serializers.ModelSerializer):
     class Meta:
-        model = MemberDetails
-        fields = ('id', 'user_name', 'members', 'house_size', 'food_choices', 'water_consumption', 'water_frequency', 'purchases'
-        , 'waste_production', 'recycle', 'transport_car', 'transport_public', 'transport_air')
-        read_only_fields = ('id', 'user_name')
+        model = ScoreModel
+        fields = ('id', 'user_name', 'score')
+        
+# class DetailsSerializer(serializers.ModelSerializer):
+#     class Meta:
+#         model = MemberDetails
+#         fields = ('id', 'user_name', 'members', 'house_size', 'food_choices', 'water_consumption', 'water_frequency', 'purchases'
+#         , 'waste_production', 'recycle', 'transport_car', 'transport_public', 'transport_air')
+#         read_only_fields = ('id', 'user_name')
