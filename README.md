@@ -3,7 +3,7 @@ Hackers of the Galaxy
 A Sustainable App that tracks the carbon footprint of users. 
 
 ![ss1](/ss/unknown.png) ![ss3](/ss/unknown3.png)
-![ss2](/ss/unknown1.png)![ss4](/ss/unknown2.png)
+![ss2](/ss/unknown4.png)![ss4](/ss/unknown2.png)
 
 
 ## Getting Started
