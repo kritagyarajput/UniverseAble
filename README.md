@@ -32,6 +32,8 @@ To start the DJANGO Server :
 
 ```
 To run the front-end :
+you basically need to install the whole flutter framework and you can do that by following this link 
+https://flutter.dev/docs/get-started/install
 ```
 
 
