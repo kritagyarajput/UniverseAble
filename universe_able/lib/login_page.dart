@@ -164,13 +164,15 @@ class _LoginPageState extends State<LoginPage> {
                           var res = await postLoginData(username, password);
                           int id = res['user']['id'];
                           Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => DashboardScreen(
-                                        username: username,
-                                        res: res,
-                                        id: id,
-                                      )));
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => DashboardScreen(
+                                username: username,
+                                res: res,
+                                id: id,
+                              ),
+                            ),
+                          );
                         },
                         child: Container(
                           decoration: BoxDecoration(

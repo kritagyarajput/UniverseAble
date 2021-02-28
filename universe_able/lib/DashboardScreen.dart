@@ -30,11 +30,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
     name = widget.username;
     token = widget.res['token'];
     id = widget.id;
-    setState(() {
-      data = getScore(id);
-    });
-
-    // print(data);
+    getScore(id);
   }
 
   Future getScore(int id) async {
@@ -63,43 +59,72 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return (data == null)
-        ? Center(child: CircularProgressIndicator())
-        : Scaffold(
-            backgroundColor: Colors.blue[900],
-            body: SingleChildScrollView(
-              child: SafeArea(
-                child: Column(
-                  children: [
-                    Container(
-                      margin:
-                          EdgeInsets.symmetric(vertical: 10, horizontal: 10),
-                      height: MediaQuery.of(context).size.height,
-                      child: Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              'Hi,',
-                              style: kHeadingFont,
-                            ),
-                            Text(
-                              '$name',
-                              style: kHeadingFont,
-                            ),
-                            SizedBox(
-                              height: 10.0,
-                            ),
-                            Container(
-                              child: Center(
-                                child: Text(
-                                  "Your Score is: ${data['score']}",
-                                  style: kHeadingFont,
+    return Scaffold(
+      backgroundColor: Colors.blue[900],
+      body: SingleChildScrollView(
+        child: SafeArea(
+          child: Column(
+            children: [
+              Container(
+                margin: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
+                height: MediaQuery.of(context).size.height,
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'Hi,',
+                        style: kHeadingFont,
+                      ),
+                      Text(
+                        '$name',
+                        style: kHeadingFont,
+                      ),
+                      SizedBox(
+                        height: 10.0,
+                      ),
+                      (haveScore == true)
+                          ? Column(
+                              children: [
+                                Container(
+                                  child: Center(
+                                    child: Text(
+                                      "Your Score is: ${score['score']}",
+                                      style: kHeadingFont,
+                                    ),
+                                  ),
                                 ),
-                              ),
-                            ),
-                            Column(
+                                GestureDetector(
+                                  onTap: () {
+                                    setState(() {
+                                      haveScore = !haveScore;
+                                    });
+                                    delScore(id);
+                                  },
+                                  child: Container(
+                                    decoration: BoxDecoration(
+                                        borderRadius:
+                                            BorderRadius.circular(40.0),
+                                        color: Colors.red,
+                                        boxShadow: [
+                                          BoxShadow(
+                                              offset: Offset(0, 2),
+                                              blurRadius: 10,
+                                              color: Colors.black45)
+                                        ]),
+                                    child: Center(
+                                      child: Text(
+                                        'Delete Score',
+                                        style: kHeadingFont.copyWith(
+                                            fontSize: 25, color: Colors.white),
+                                      ),
+                                    ),
+                                  ),
+                                )
+                              ],
+                            )
+                          : Column(
                               children: [
                                 Text(
                                   'Calculate Your Carbon Footprint Score:',
@@ -150,78 +175,51 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                 ),
                               ],
                             ),
-                            (dataDeleted)
-                                ? null
-                                : GestureDetector(
-                                    onTap: () {
-                                      delScore(id);
-                                    },
-                                    child: Container(
-                                      decoration: BoxDecoration(
-                                          borderRadius:
-                                              BorderRadius.circular(40.0),
-                                          color: Colors.red,
-                                          boxShadow: [
-                                            BoxShadow(
-                                                offset: Offset(0, 2),
-                                                blurRadius: 10,
-                                                color: Colors.black45)
-                                          ]),
-                                      child: Center(
-                                        child: Text(
-                                          'Delete Score',
-                                          style: kHeadingFont.copyWith(
-                                              fontSize: 25,
-                                              color: Colors.white),
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                            SizedBox(
-                              height: 10,
-                            ),
-                            Center(
-                              child: Image(
-                                image: AssetImage('images/earth.png'),
-                              ),
-                            ),
-                            SizedBox(
-                              height: 10,
-                            ),
-                            GestureDetector(
-                              onTap: () {
-                                Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) => LeaderBoard()));
-                              },
-                              child: Container(
-                                decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(40.0),
-                                    color: Colors.yellow,
-                                    boxShadow: [
-                                      BoxShadow(
-                                          offset: Offset(0, 2),
-                                          blurRadius: 10,
-                                          color: Colors.black45)
-                                    ]),
-                                child: Center(
-                                  child: Text(
-                                    'Show LeaderBoard',
-                                    style: kHeadingFont.copyWith(
-                                        fontSize: 25, color: Colors.black),
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ],
+                      SizedBox(
+                        height: 10,
+                      ),
+                      Center(
+                        child: Image(
+                          image: AssetImage('images/earth.png'),
                         ),
                       ),
-                    ),
-                  ],
+                      SizedBox(
+                        height: 10,
+                      ),
+                      GestureDetector(
+                        onTap: () {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => LeaderBoard()));
+                        },
+                        child: Container(
+                          decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(40.0),
+                              color: Colors.yellow,
+                              boxShadow: [
+                                BoxShadow(
+                                    offset: Offset(0, 2),
+                                    blurRadius: 10,
+                                    color: Colors.black45)
+                              ]),
+                          child: Center(
+                            child: Text(
+                              'Show LeaderBoard',
+                              style: kHeadingFont.copyWith(
+                                  fontSize: 25, color: Colors.black),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               ),
-            ),
-          );
+            ],
+          ),
+        ),
+      ),
+    );
   }
 }

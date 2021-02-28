@@ -2,7 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-TextStyle kHeadingFont = GoogleFonts.anton(
+TextStyle kHeadingFont = GoogleFonts.workSans(
   fontSize: 50,
   color: Colors.white,
   letterSpacing: 1,
